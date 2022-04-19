@@ -4,15 +4,22 @@ import {
   createSlice,
   PayloadAction,
 } from "@reduxjs/toolkit";
-import { createTopicAPI } from "./topicAPI";
-import { CreateTopicParams, TopicState } from "./topicTypes";
+import { TopicAPI } from "./topicAPI";
+import { CreateTopicParams, GetTopicParams, TopicState } from "./topicTypes";
 
 const initialState = { topic: null, topics: null } as unknown as TopicState;
 
 export const createTopic = createAsyncThunk(
   "topic/create-topic",
   async (data: CreateTopicParams) => {
-    await createTopicAPI(data);
+    await TopicAPI.create(data);
+  }
+);
+
+export const getTopics = createAsyncThunk(
+  "topic/get-topics",
+  async (data: GetTopicParams) => {
+    await TopicAPI.getAll(data);
   }
 );
 
