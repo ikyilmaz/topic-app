@@ -38,7 +38,8 @@ export const counterSlice = createSlice({
   reducers: {
     setUser: (state, action: PayloadAction<any>) => {
       state.user = action.payload;
-      localStorage.setItem("user", JSON.stringify(action.payload));
+      if (!!action.payload)
+        localStorage.setItem("user", JSON.stringify(action.payload));
     },
   },
   extraReducers: (builder) => {
