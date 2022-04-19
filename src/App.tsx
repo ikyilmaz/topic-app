@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { firebaseApp, firebaseConfig } from "./config/firebaseConfig";
+import { firebaseApp } from "./config/firebaseConfig";
 import "./App.css";
 import { getAuth } from "firebase/auth";
 import { useAppDispatch, useAppSelector } from "./app/hooks";
@@ -10,9 +10,9 @@ import {
   setUser,
   signup,
 } from "./features/auth/authSlice";
-import { createTopic } from "./features/topic/topicSlice";
+import { createTopic, getTopics } from "./features/topic/topicSlice";
 
-function App() {
+const App: React.FC = () => {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
 
@@ -21,15 +21,17 @@ function App() {
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
 
-  const auth = getAuth(firebaseApp);
+  useEffect(() => {
+    const auth = getAuth(firebaseApp);
+
+    auth.onAuthStateChanged((fbUser) => {
+      dispatch(setUser(fbUser?.toJSON()));
+    });
+  }, [dispatch]);
 
   useEffect(() => {
-    auth.onAuthStateChanged((user) => {
-      dispatch(setUser(user?.toJSON()));
-    });
-  }, []);
-
-  useEffect(() => {}, [user]);
+    dispatch(getTopics({ orderBy: "heading" }));
+  }, [dispatch]);
 
   return (
     <div className="App">
@@ -69,6 +71,6 @@ function App() {
       </button>
     </div>
   );
-}
+};
 
 export default App;
