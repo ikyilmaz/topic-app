@@ -15,3 +15,7 @@ export type CreateTopicParams = {
   heading: string;
   ownerID: string;
 };
+
+export type GetTopicParams = {
+  orderBy: keyof ITopic;
+};
